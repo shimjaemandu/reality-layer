@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#143e37"><title>Reality Layer · 일상을 잇다</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%23143e37'/%3E%3Cpath d='M10 28V12h10a6 6 0 0 1 0 12H10m10 0 9 4' fill='none' stroke='%23d1efb2' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/everyday.css"><script defer src="/everyday.js"></script>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="Reality Layer 홈"><span class="brand-mark">r<span>l</span></span><span>reality<span class="brand-sub">LAYER / 01</span></span></a>
+    <p class="nav-label">MY EVERYDAY</p>
+    <nav aria-label="주 메뉴">
+      <button class="nav-item selected" data-tab="home"><span>◫</span> 일상 <i>01</i></button>
+      <button class="nav-item" data-tab="preferences"><span>◎</span> 내 설정 <i>02</i></button>
+      <button class="nav-item" data-tab="connections"><span>⌘</span> 연결 <i>03</i></button>
+      <button class="nav-item" data-tab="history"><span>≡</span> 기록 <i>04</i></button>
+    </nav>
+    <div class="sidebar-note"><div class="tiny-orbit"><span></span><span></span><span></span></div><p>기기는 달라도,<br>일상은 하나로.</p><small>One context. Any space.</small></div>
+    <div class="sidebar-footer"><span class="avatar" id="avatar">나</span><div><b id="profileName">나의 공간</b><small>개인 노트북에서 실행 중</small></div><span class="status-dot"></span></div>
+  </aside>
+  <div class="main-shell">
+    <header class="topbar"><span id="pageLabel">나의 일상 <small>/ Everyday</small></span><div class="top-meta"><span class="mode-chip" id="modeLabel">연결 중</span><span id="today"></span></div></header>
+    <main>
+      <div id="fatal" role="alert" hidden></div>
+      <section id="home" class="tab-panel">
+        <div class="intro"><div><p class="eyebrow">YOUR LIFE, CONNECTED</p><h1>일상이, 자연스럽게 이어지도록.</h1><p class="subheading">하고 싶은 일을 말해 주세요. 공간과 기기는 함께 준비할게요.</p></div><span class="version-stamp">REALITY LAYER<br><b>Core 1.5 · Everyday</b></span></div>
+        <div class="location-bar"><div><span class="status-dot"></span><b>지금 있는 곳</b><span class="muted">직접 선택</span></div><div class="location-switch" role="group" aria-label="현재 공간"><button data-location="living_room">거실</button><button data-location="bedroom">침실</button></div></div>
+        <div class="workspace-grid">
+          <div class="main-column">
+            <section class="command-card" aria-labelledby="commandHeading"><div class="section-label"><span class="small-star">✳</span><span id="commandHeading">무엇을 준비할까요?</span><span class="engine-label" id="engineLabel">로컬 해석</span></div>
+              <form id="commandForm"><label class="sr-only" for="commandInput">일상 명령</label><textarea id="commandInput" maxlength="500" rows="2" placeholder="공부 시작할게"></textarea><div class="command-bottom"><button type="button" class="voice-button" id="voiceButton" title="음성으로 입력">♩ <span>음성 입력</span></button><button class="primary" id="planButton" type="submit">준비해 줘 <span>↗</span></button></div></form>
+              <p class="input-hint" id="inputHint">먼저 실행할 내용을 보여드려요. 확인 후 기기를 움직여요.</p>
+            </section>
+            <section class="routine-section"><div class="section-heading"><h2>자주 하는 일</h2><span>한 번의 요청으로</span></div><div id="routines" class="routine-grid"></div></section>
+            <section class="space-card"><div class="section-heading"><h2>내 공간</h2><button class="text-button" id="refreshDevices">상태 새로고침 ↻</button></div>
+              <div class="rooms">
+                <article class="room living" id="livingRoom"><div class="room-caption"><h3>거실</h3><span class="room-power" id="livingPower">—</span></div><div class="room-art" aria-hidden="true"><div class="window"><i></i><i></i></div><div class="floor-lamp"><i></i></div><div class="couch"><i></i><i></i></div><div class="coffee-table"></div><div class="rug"></div><div class="plant"><i></i></div></div><div class="room-footer"><span class="presence-label" id="livingPresence"></span><span class="room-mode" id="livingMode">가상 조명 A</span></div></article>
+                <article class="room bedroom" id="bedroom"><div class="room-caption"><h3>침실</h3><span class="room-power" id="bedroomPower">—</span></div><div class="room-art" aria-hidden="true"><div class="picture"></div><div class="desk"><div class="monitor"></div><div class="desk-lamp"></div></div><div class="chair"></div><div class="bed"><i></i></div><div class="rug"></div></div><div class="room-footer"><span class="presence-label" id="bedroomPresence"></span><span class="room-mode" id="bedroomMode">가상 조명 B</span></div></article>
+              </div><div class="device-strip" id="deviceStrip"></div>
+              <details class="occupancy"><summary>함께 쓰는 공간 체험</summary><label><input type="checkbox" id="familyPresent"> 가족이 거실을 사용 중이에요</label><p>켜 두면 외출·휴식·공간 이동 시 거실 조명 변경을 생략해요. 실제 사람 감지가 아닌 체험 설정이에요.</p></details>
+            </section>
+          </div>
+          <aside class="right-column">
+            <section class="continuity-card"><div class="section-heading"><h2>이어지는 활동</h2><span class="live-pill" id="sessionStatus">대기</span></div><div class="session-symbol">◎</div><h3 id="sessionTitle">작은 시작, 하나부터.</h3><p id="sessionDescription">공부를 시작하면 공간을 옮겨도<br>남은 시간과 설정이 이어져요.</p><div id="sessionClock" class="session-clock">25<span>:00</span></div><div class="progress-track"><div id="sessionProgress"></div></div><button id="resumeButton" class="secondary wide">이 공간에서 이어서 하기 ↗</button><button id="pauseButton" class="text-button wide" hidden>잠시 멈추기</button><div class="continuity-footer"><span>⌁</span><span id="sessionFootnote">활동은 이 노트북에 저장돼요.</span></div></section>
+            <section class="recent-card"><div class="section-heading"><h2>최근 동작</h2><button data-tab="history" class="text-button">모두 보기 ↗</button></div><div id="recentLogs"></div></section>
+            <p class="demo-note" id="demoNote">체험 모드에서는 화면 속 기기 상태만 바뀌어요. 실제 기기는 연결 탭에서 준비할 수 있어요.</p>
+          </aside>
+        </div>
+      </section>
+      <section id="preferences" class="tab-panel" hidden><p class="eyebrow">PERSONAL CONTEXT</p><h1>어디서나, 나에게 맞게.</h1><p class="subheading">설정을 한 번 저장하면 거실과 침실에 같은 기준을 적용해요.</p><form class="settings-card" id="profileForm"><div class="form-grid"><label>표시 이름<input name="name" maxlength="30" required></label><label>집중할 활동<input name="focus_title" maxlength="80" required></label><label>집중 시간 (분)<input name="focus_minutes" type="number" min="1" max="180" required></label><label>공부할 때 밝기 (%)<input name="study_brightness" type="number" min="1" max="100" required></label><label>쉴 때 밝기 (%)<input name="relax_brightness" type="number" min="1" max="100" required></label><label>잠들기 전 밝기 (%)<input name="sleep_brightness" type="number" min="1" max="100" required></label></div><label class="checkbox-label"><input name="open_notepad" type="checkbox"> 집중 시작 시 노트북 메모장도 열기</label><p class="muted">체험 모드에서는 메모장을 실제로 열지 않아요.</p><button type="submit" class="primary">내 설정 저장</button><span id="saveStatus" role="status"></span></form><div class="explain-card"><b>기억하는 것</b><p>직접 저장한 밝기·활동 제목·집중 시간, 최근에 선택한 공간과 실행 기록. 브라우저 탭, 파일 내용, 위치 정보는 자동 수집하지 않아요.</p></div></section>
+      <section id="connections" class="tab-panel" hidden><p class="eyebrow">ONE LAYER, MANY DEVICES</p><h1>기기가 연결되면, 일상이 움직여요.</h1><p class="subheading">기기마다 다른 제어 방식을 공통 명령으로 연결해요.</p><div id="connectionList" class="connection-grid"></div><div class="settings-card"><h2>Windows 앱 경로 등록</h2><p class="muted">자동으로 못 찾는 앱은 실행 파일(.exe) 경로를 한 번 등록하면 돼요. VS Code 예: <code>C:\Users\내이름\AppData\Local\Programs\Microsoft VS Code\Code.exe</code></p><div id="appRegistrySummary" class="app-registry-summary">앱 상태를 불러오는 중…</div><form id="appRegisterForm" class="app-register-form"><div class="form-grid"><label>앱 ID<input name="id" placeholder="vscode" pattern="[a-z0-9_-]{2,40}" required></label><label>표시 이름<input name="name" placeholder="Visual Studio Code" required></label><label class="wide-field">실행 파일 전체 경로<input name="path" placeholder="C:\...\Code.exe" required></label><label>별칭 (쉼표로 구분)<input name="aliases" placeholder="vs code, 비주얼 스튜디오 코드"></label></div><div class="dialog-actions"><button type="button" class="secondary" id="discoverVscode">VS Code 자동 찾기</button><button type="submit" class="primary">앱 경로 등록</button></div><span id="appRegisterStatus" role="status"></span></form></div><div class="settings-card"><h2>실제 기기 연결</h2><ol class="setup-steps"><li><b>먼저 이 화면에서 체험하기</b><p>추가 기기나 API 키 없이 기본 일상 명령을 실행해 보세요.</p></li><li><b>Windows 노트북 연결</b><p>현재 실행 창을 닫고 START-WINDOWS.cmd를 실행하면 메모장 등 등록한 앱을 실제로 열 수 있어요.</p></li><li><b>Home Assistant 조명 연결</b><p>config.example.json을 config.local.json으로 복사하고 내 Home Assistant 주소·토큰·조명 ID를 입력해요. 토큰은 화면에 표시하지 않아요. 실제 연결 모드로 다시 시작해 주세요.</p></li></ol><p class="muted">Home Assistant에 미리 연결된 조명이 필요해요. 실제 하드웨어와 마이크는 이 개발 환경에서 검증하지 못했어요.</p><details><summary>AI 자연어 해석 사용하기</summary><p>config.local.json에 OpenAI API 키를 넣으면 개별 기기 명령의 다양한 표현을 해석해요. 키가 없으면 정해진 일상 표현과 로컬 해석기로 작동해요. 일상 순서는 검증된 규칙으로 구성해요. API 사용료는 별도이며, AI 해석을 쓰면 입력한 명령과 기기·공간 정보가 OpenAI로 전송돼요.</p></details></div><div class="explain-card"><b>현재 연결 범위</b><p>이 노트북 안에서 사용하는 시제품이에요. 계정 로그인, 스마트폰 원격 연결, 자동차·로봇 제어, 자동 위치 감지는 아직 구현 범위에 포함되지 않아요.</p><a href="/lab.html">기존 v1.3 개발 실험실 열기 ↗</a></div></section>
+      <section id="history" class="tab-panel" hidden><p class="eyebrow">ACTION HISTORY</p><h1>무엇이, 왜 실행됐는지.</h1><p class="subheading">기기별 실행 결과와 오류를 확인할 수 있어요.</p><div id="historyList" class="history-list"></div></section>
+      <footer class="main-footer"><span>reality layer</span><span>당신의 일상을 잇는 공통 기반.</span><span>LOCAL PROTOTYPE · CORE 1.5</span></footer>
+    </main>
+  </div>
+</div>
+<dialog id="planDialog" aria-labelledby="planTitle"><div class="dialog-header"><p class="eyebrow">READY WHEN YOU ARE</p><button id="closePlan" class="icon-button" aria-label="계획 닫기">×</button></div><h2 id="planTitle">일상 준비</h2><p id="planDescription"></p><p class="plan-mode-note" id="planMode"></p><div id="planSteps"></div><div id="planOutcome" role="status" hidden></div><div class="dialog-actions"><button class="secondary" id="cancelPlan">취소</button><button class="primary" id="executePlan">이대로 실행</button></div><p class="dialog-footnote" id="planFootnote">실행 직전에 공간과 권한을 다시 확인해요.</p></dialog>
+<dialog id="clarifyDialog" aria-labelledby="clarifyTitle"><h2 id="clarifyTitle">조금 더 알려주세요</h2><p id="clarifyQuestion">어떤 대상을 말한 건가요?</p><div id="clarifyOptions" class="clarify-options"></div><div class="dialog-actions"><button class="secondary" id="clarifyCancel">직접 다시 입력</button></div></dialog>
+<dialog id="voiceDialog" aria-labelledby="voiceTitle"><h2 id="voiceTitle">말로 입력하기</h2><p>마이크는 버튼을 눌렀을 때만 켜져요. 브라우저에 따라 음성이 브라우저 제공업체의 서버로 전송될 수 있어요. 인식한 문장을 직접 확인한 뒤 준비해 줘를 눌러 주세요.</p><div class="dialog-actions"><button class="secondary" id="voiceCancel">취소</button><button class="primary" id="voiceStart">마이크 켜기</button></div></dialog>
+<div id="toast" role="status" hidden></div>
+</body></html>

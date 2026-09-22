@@ -1,0 +1,29 @@
+Reality Layer 1.8.1 - 처음 실행하기
+
+1. ZIP 파일을 완전히 압축 해제하세요.
+2. Node.js 22 이상이 설치된 노트북에서 START-DEMO.cmd를 더블클릭하세요.
+3. 열리지 않으면 Microsoft Edge에서 http://127.0.0.1:3000 을 입력하세요.
+4. 거실 선택 → 집중 시작 → 이대로 실행.
+5. 잠시 멈추기 → 침실 선택 → 이 공간에서 이어서 하기.
+
+실제 PC 제어는 Demo를 종료한 뒤 START-WINDOWS.cmd로 시작합니다.
+Windows 웹 열기/검색은 Microsoft Edge를 우선 사용합니다.
+VS Code는 자동 탐색하며, 필요하면 연결 탭에서 자동 찾기를 실행하세요.
+
+Core 개발 API:
+/api/reality-graph  = 구조와 관계
+/api/state-store    = 현재 상태
+/api/event-store    = 과거 이벤트
+
+PowerShell에서는 npm.cmd test를 권장합니다. v1.8.1 외부 Runtime/adapter 테스트까지 포함해 전체 PASS를 확인하세요.
+
+
+v1.8.1 MCP / External action contract:
+- Endpoint: http://127.0.0.1:3000/mcp
+- Protocol: MCP 2026-07-28 modern stateless
+- 외부 Agent용 Bearer token은 실행 터미널에 표시됩니다.
+- reality.discover / observe / plan / execute / explain
+- reality.action.get / reality.action.reconcile
+- reality.execute 결과에 action_id / outcome / provenance / reconciliation 상태가 직접 포함됩니다.
+- UNKNOWN은 blind retry하지 말고 외부 evidence로 reconciliation 후 다음 동작을 결정합니다.
+- 외부 Agent는 CONFIRM 단계의 사용자 확인을 스스로 승인할 수 없습니다.

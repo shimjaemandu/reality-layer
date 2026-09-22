@@ -1,0 +1,12 @@
+{
+  "openai_api_key": "",
+  "openai_model": "gpt-5.6-luna",
+  "home_assistant": {
+    "url": "",
+    "token": "",
+    "entities": {
+      "living_room_light": "light.your_living_room",
+      "bedroom_light": "light.your_bedroom"
+    }
+  }
+}

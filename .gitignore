@@ -1,0 +1,7 @@
+config.local.json
+apps.local.json
+.env
+node_modules/
+data/*.json
+data/*.tmp
+!data/.gitkeep
