@@ -21,6 +21,7 @@ const { publicRealityGraph } = require('./src/reality-graph');
 const { publicStateStore, syncSensorState, resetStateStore } = require('./src/state-store');
 const { appendEvent, readEvents, resetEventStore, publicEventStore } = require('./src/event-store');
 const actionLedger = require('./src/action-ledger');
+const recoveredInterruptedActions = actionLedger.recoverInterrupted();
 const { getContextGraphState, publicContextGraph, setActorPresence, syncIdentityFromContext, resetContextGraph, contextGraphSnapshotForAction, validateContextGraphSnapshot } = require('./src/context-graph');
 const { buildPlan, publicOrchestratorSpec } = require('./src/orchestrator');
 const localAccess = require('./src/local-access');
@@ -274,7 +275,7 @@ async function createNorthboundPlan(body = {}) {
     plan = {
       ok:policy.allowed,
       plan_id:planId,
-      orchestrator_version:'reality-northbound/1.8.1',
+      orchestrator_version:'reality-northbound/1.8.2',
       intent:'direct_command',
       title:'직접 Reality 행동',
       source_text:text,
@@ -442,7 +443,7 @@ function northboundDiscover(args = {}) {
   const includeGraph = args.include_graph !== false;
   return {
     ok:true,
-    reality_layer_version:'1.8.1',
+    reality_layer_version:'1.8.2',
     identity:getIdentity(),
     runtime:runtimeStatus(),
     capability_model:publicCapabilityModel(),
@@ -576,7 +577,7 @@ const server = http.createServer(async (req, res) => {
     if (req.url==='/mcp' && req.method==='DELETE') return await mcpServer.handle(req,res,{});
     if (req.method==='GET' && req.url==='/api/everyday') {
       refreshContext();
-      return json(res,200,{ok:true,version:'1.8.1',...everyday.snapshot(),context:publicContext(),identity:getIdentity(),runtime:runtimeStatus(),ai:aiStatus(),bridge:homeAssistant.status(),routines:ROUTINES.map(({re,...r})=>r),devices:publicDevices().filter(d=>d.type!=='door').map(d=>({...d,execution_mode:executionMode(d)})),actor_presence:getContextGraphState().actors,logs:readLogs().slice(-25).reverse()});
+      return json(res,200,{ok:true,version:'1.8.2',...everyday.snapshot(),context:publicContext(),identity:getIdentity(),runtime:runtimeStatus(),ai:aiStatus(),bridge:homeAssistant.status(),routines:ROUTINES.map(({re,...r})=>r),devices:publicDevices().filter(d=>d.type!=='door').map(d=>({...d,execution_mode:executionMode(d)})),actor_presence:getContextGraphState().actors,logs:readLogs().slice(-25).reverse()});
     }
     if (req.method==='POST' && req.url==='/api/everyday/profile') {
       if (getIdentity().role!=='owner') return json(res,403,{ok:false,error:'개인 설정은 소유자 역할에서 변경해 주세요.'});
@@ -680,7 +681,8 @@ const server = http.createServer(async (req, res) => {
 if (require.main === module) {
   server.listen(PORT, '127.0.0.1', () => {
     const status = aiStatus();
-    console.log(`Reality Layer v1.8.1 — External Runtime → http://127.0.0.1:${PORT}`);
+    console.log(`Reality Layer v1.8.2 — External Runtime → http://127.0.0.1:${PORT}`);
+    if (recoveredInterruptedActions.length) console.warn(`[Reality Layer] recovered ${recoveredInterruptedActions.length} interrupted action(s) as UNKNOWN; reconciliation required`);
     console.log(`MCP endpoint: http://127.0.0.1:${PORT}/mcp`);
     console.log(`MCP Bearer token: ${mcpAccess.token}`);
     console.log(status.configured ? `AI: OpenAI ${status.model}` : 'AI: API 키 없음 → 로컬 폴백 모드');

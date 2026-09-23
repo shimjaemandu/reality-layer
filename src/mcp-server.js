@@ -4,11 +4,11 @@ const { appendEvent } = require('./event-store');
 
 const MCP_PROTOCOL_VERSION = '2026-07-28';
 const LEGACY_PROTOCOL_VERSIONS = ['2025-11-25','2025-06-18','2025-03-26','2024-11-05'];
-const MCP_SERVER_VERSION = 'reality-mcp/1.8.1';
+const MCP_SERVER_VERSION = 'reality-mcp/1.8.2';
 const SERVER_INFO = {
   name: 'reality-layer',
   title: 'Reality Layer',
-  version: '1.8.1',
+  version: '1.8.2',
   description: 'Local-first Reality Layer northbound MCP server with policy/safety-gated physical execution.',
 };
 

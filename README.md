@@ -1,33 +1,10 @@
-# Reality Layer v1.8.1 — External Runtime Test Build
+# Reality Layer v1.8.2 — External Runtime Test Build
 
-> Third-party integration checkpoint: explicit action outcomes (`SUCCEEDED` / `FAILED` / `UNKNOWN`), reconciliation, stable Typed Action IR IDs, provenance, and a dependency-free LangGraph adapter. v1.8.1 exposes the action contract directly in `reality.execute` and adds MCP action-status/reconciliation tools. See `docs/EXTERNAL-RUNTIME.md`.
+> Third-party integration checkpoint: explicit action outcomes (`SUCCEEDED` / `FAILED` / `UNKNOWN`), reconciliation, stable Typed Action IR IDs, provenance, and a dependency-free LangGraph adapter. v1.8.2 exposes the action contract directly in `reality.execute` and adds MCP action-status/reconciliation tools. See `docs/EXTERNAL-RUNTIME.md`.
 
-# Reality Layer 1.8.1 · Dual-era MCP + External Action Contract
+# Reality Layer 1.8.2 · Dual-era MCP + External Action Contract
 
-## External integrator quick start (English)
-
-Reality Layer sits between an AI/agent and real-world adapters. This test build is intentionally narrow: it exposes a stable action identity, explicit `SUCCEEDED` / `FAILED` / `UNKNOWN` outcomes, provenance, and reconciliation without allowing an external agent to bypass policy/safety checks.
-
-Windows PowerShell:
-
-```powershell
-npm.cmd test
-npm.cmd start -- --no-open
-# copy the printed MCP Bearer token, then in a second terminal:
-$env:REALITY_MCP_TOKEN="<token>"
-npm.cmd run example:langgraph
-```
-
-Expected smoke-test tail:
-
-```text
-ACTION <stable-action-id>: SUCCEEDED / reconciliation=NOT_REQUIRED
-```
-
-The adapter is dependency-free and can be wrapped by LangGraph/LangChain tooling. See `docs/EXTERNAL-RUNTIME.md` for the contract and `integrations/langgraph/reality-layer-adapter.js` for the adapter. This is an integration-test build, not a production-readiness claim.
-
-
-Reality Layer v1.8.1은 v1.7.1의 **Capability Model + Typed Action IR + Reality Graph / State Store / Event Store + Dual-era MCP**를 유지하면서, 외부 AI/Agent가 실행 결과를 안전하게 복구할 수 있도록 **stable action outcome contract와 reconciliation 경로**를 노출합니다.
+Reality Layer v1.8.2은 v1.7.1의 **Capability Model + Typed Action IR + Reality Graph / State Store / Event Store + Dual-era MCP**를 유지하면서, 외부 AI/Agent가 실행 결과를 안전하게 복구할 수 있도록 **stable action outcome contract와 reconciliation 경로**를 노출합니다.
 
 ```text
 External AI / Agent
@@ -137,7 +114,7 @@ v1.7은 **MCP 2026-07-28 modern stateless lifecycle**을 대상으로 합니다.
 - localhost (`127.0.0.1`) 전용
 - `clientInfo`는 감사/표시용 self-reported metadata일 뿐 권한 부여에 사용하지 않음
 
-v1.8.1은 **MCP 2026-07-28 modern stateless flow**와 **2025-11-25 계열 initialize/session compatibility flow**를 함께 지원합니다. 두 경로 모두 Bearer token 검증을 거치며, legacy clientInfo도 권한 부여가 아닌 감사용 self-reported metadata로만 취급합니다.
+현재 v1.7은 2026 modern lifecycle에 집중하며, 2025 계열 `initialize`/session 호환 모드는 구현하지 않습니다.
 
 ## 중요한 보안 원칙
 
@@ -220,41 +197,33 @@ Wake Word는 아직 구현하지 않았습니다.
 npm test
 ```
 
-현재 회귀 스위트:
+v1.7 기준:
 
 ```text
-Core / Policy / Windows regression        PASS
-Everyday integration                      PASS (19)
-v1.5 Capability / Typed Action IR         PASS (8)
-v1.6 Reality Graph / State / Event        PASS (8)
-v1.7 Northbound MCP                       PASS (9)
-v1.7.1 Legacy MCP compatibility           PASS (5)
-v1.8 Action ledger / UNKNOWN recovery     PASS
-v1.8.1 External action contract           PASS
+기존 Core / Policy / Windows 회귀
+Everyday 통합                     19
+v1.5 Capability / Action IR        8
+v1.6 Graph / State / Event         8
+v1.7 MCP 신규                      9
+-------------------------------------
+전체 PASS                          94
 ```
 
-2026-09-22 Windows PowerShell + Node v24.21.0에서 LangGraph-style external adapter smoke test를 별도로 실행해 다음 경로를 확인했습니다.
+v1.7 신규 테스트는 Bearer 인증, `server/discover`, `tools/list`, 표준 헤더 일치 검사, discover/observe, direct natural-language plan, AUTO 실행, Agent self-confirm 차단, clientInfo 비신뢰 처리, explain/audit를 검증합니다.
 
-```text
-plan → AUTO policy → execute → stable action_id → SUCCEEDED
-     → provenance(plan_id/actor_id) → reconciliation=NOT_REQUIRED
-```
-
-`UNKNOWN`은 blind retry 대상이 아니며 `reality.action.get`으로 상태를 읽고, 신뢰 가능한 외부 evidence가 있을 때만 `reality.action.reconcile`로 `SUCCEEDED` 또는 `FAILED`로 확정합니다.
-
-세부 문서: `docs/EXTERNAL-RUNTIME.md`, `docs/VERIFICATION.md`, `docs/ARCHITECTURE.md`
+세부 문서: `docs/V1.7.md`, `docs/ARCHITECTURE.md`, `docs/VERIFICATION.md`
 
 ## 기준 로드맵
 
 ```text
-v1.5    Capability Model + Typed Action IR          ✅
-v1.6    Reality Graph / State / Event 분리          ✅
-v1.7    Northbound MCP Server                       ✅
-v1.7.1  Legacy MCP compatibility                    ✅
-v1.8    Stable action outcome + reconciliation       ✅
-v1.8.1  External Runtime contract + LangGraph adapter ✅ 현재
-next    Third-party agent integration feedback       →
+v1.5  Capability Model + Typed Action IR          ✅
+v1.6  Reality Graph / State / Event 분리          ✅
+v1.7  Northbound MCP Server                       ✅ 현재
+v1.8  Protocol Connector + MCP/WoT importer       다음
+v1.9  retry / idempotency / compensation
+v2.0  Local Reality Runtime 아키텍처 고정
 ```
+
 
 ## v1.7.1 MCP compatibility
 
