@@ -28,7 +28,7 @@ function start(ir,device){
   const all=read(),now=new Date().toISOString();
   let a=all.find(x=>x.action_id===ir?.id);
   if(a)return clone(a);
-  a={schema:'reality-action-outcome/1.0',action_id:ir?.id||null,status:'STARTED',attempt:1,created_at:now,updated_at:now,target_id:device?.id||ir?.target?.device_id||null,provenance:clone(ir?.provenance||{}),reconciliation:reconciliationFor('STARTED'),evidence:[]};
+  a={schema:'reality-action-outcome/1.0',action_id:ir?.id||null,status:'STARTED',attempt:1,created_at:now,updated_at:now,target_id:device?.id||ir?.target?.device_id||null,provenance:clone(ir?.provenance||{}),request:{target:clone(ir?.target||{}),capability:clone(ir?.capability||{}),operation:ir?.operation||null,input:clone(ir?.input||{}),compatibility:clone(ir?.compatibility||{})},reconciliation:reconciliationFor('STARTED'),evidence:[]};
   all.push(a);write(all);return clone(a);
 }
 function transition(id,status,evidence={}){
@@ -55,6 +55,10 @@ function recoverInterrupted(){
 }
 function get(id){return clone(read().find(x=>x.action_id===id)||null);}
 function list(limit=50){return clone(read().slice(-Math.max(1,Math.min(200,Number(limit)||50))).reverse());}
-function reconcile(id,{outcome,evidence={}}={}){const cur=get(id);if(!cur)throw new Error('Action outcome not found');if(cur.status!=='UNKNOWN')return cur;if(!['SUCCEEDED','FAILED'].includes(outcome))throw new Error('UNKNOWN action can only reconcile to SUCCEEDED or FAILED');return transition(id,outcome,{source:'reconciliation',...evidence});}
+function addEvidence(id,evidence={}){const all=read(),i=all.findIndex(x=>x.action_id===id);if(i<0)throw new Error('Action outcome not found');const cur=all[i];cur.updated_at=new Date().toISOString();if(!Array.isArray(cur.evidence))cur.evidence=[];cur.evidence.push({at:cur.updated_at,...clone(evidence)});write(all);return clone(cur);}
+// Terminal reconciliation is intentionally not exposed to callers. A future provider-specific
+// verifier may call this only after it has cryptographically/provider-bound evidence for this action.
+const TRUSTED_RECONCILIATION=Symbol('trusted-reconciliation');
+function reconcileTrusted(id,{outcome,evidence={},authority}={}){if(authority!==TRUSTED_RECONCILIATION)throw new Error('Trusted reconciliation authority required');const cur=get(id);if(!cur)throw new Error('Action outcome not found');if(cur.status!=='UNKNOWN')return cur;if(!['SUCCEEDED','FAILED'].includes(outcome))throw new Error('UNKNOWN action can only reconcile to SUCCEEDED or FAILED');return transition(id,outcome,{source:'trusted-reconciliation',...evidence});}
 function reset(){write([]);}
-module.exports={start,transition,recoverInterrupted,get,list,reconcile,reset};
+module.exports={start,transition,recoverInterrupted,get,list,addEvidence,reconcileTrusted,TRUSTED_RECONCILIATION,reset};

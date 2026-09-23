@@ -26,7 +26,7 @@ async function test(name,fn){await fn();passed++;console.log('PASS '+name);}
     });
     await test('v1.7은 Everyday를 앱 계층으로 유지하고 Identity를 데모로 명시한다',async()=>{
       const state=await request('/api/everyday');
-      assert.equal(state.version,'1.8.2');
+      assert.equal(state.version,'1.8.2.1');
       assert.equal(state.identity.authenticated,false);
       assert.equal(state.identity.identity_assurance,'demo');
       assert.equal(state.identity.real_world_verified,false);

@@ -29,10 +29,10 @@ const ledger=require('../src/action-ledger');
   assert.equal(duplicateRejected,true);
   assert.equal(ledger.get(interrupted.id).status,'UNKNOWN');
 
-  // UNKNOWN remains resolvable through the existing external-test reconciliation primitive.
-  const reconciled=ledger.reconcile(interrupted.id,{outcome:'SUCCEEDED',evidence:{source:'adapter-readback',note:'observed expected state'}});
-  assert.equal(reconciled.status,'SUCCEEDED');
-  assert.equal(reconciled.reconciliation.required,false);
+  // Caller-controlled evidence cannot terminally reconcile UNKNOWN.
+  assert.equal(typeof ledger.reconcile,'undefined');
+  assert.throws(()=>ledger.reconcileTrusted(interrupted.id,{outcome:'SUCCEEDED',evidence:{source:'caller'},authority:null}),/Trusted reconciliation authority required/);
+  assert.equal(ledger.get(interrupted.id).status,'UNKNOWN');
 
   console.log('V1.8.2 CRASH RECOVERY TESTS PASSED');
 })().catch(e=>{console.error(e);process.exitCode=1});

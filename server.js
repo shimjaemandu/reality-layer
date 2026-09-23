@@ -443,7 +443,7 @@ function northboundDiscover(args = {}) {
   const includeGraph = args.include_graph !== false;
   return {
     ok:true,
-    reality_layer_version:'1.8.2',
+    reality_layer_version:'1.8.2.1',
     identity:getIdentity(),
     runtime:runtimeStatus(),
     capability_model:publicCapabilityModel(),
@@ -493,22 +493,26 @@ function northboundActionGet(args = {}) {
   };
 }
 
-function northboundActionReconcile(args = {}, {client} = {}) {
+async function northboundActionReconcile(args = {}, {client} = {}) {
   const actionId = String(args.action_id || '');
   const before = actionLedger.get(actionId);
   if (!before) return { ok:false, error:'해당 action_id를 찾지 못했습니다.', action_id:actionId };
-  if (before.status !== 'UNKNOWN') {
-    return { ok:true, action:before, changed:false, note:'이미 UNKNOWN이 아닌 상태이므로 결과를 변경하지 않았습니다.', reconciliation:{required:false,state:'NOT_REQUIRED'} };
+  if (before.status !== 'UNKNOWN') return { ok:true, action:before, changed:false, reconciliation:{required:false,state:'NOT_REQUIRED'} };
+
+  const device = devices[before.target_id];
+  if (!device || device.adapter_id !== 'home_assistant_light') {
+    return { ok:true, action:before, changed:false, reconciliation:{required:true,state:'REQUIRED',reason:'trusted_reconciliation_not_available_for_adapter'}, note:'Caller assertions are not accepted as execution proof.' };
   }
-  const action = actionLedger.reconcile(actionId,{
-    outcome:String(args.outcome || ''),
-    evidence:{ source:'mcp-reconciliation', note:String(args.evidence_note || '').slice(0,500), client:client || null },
-  });
-  appendEvent({
-    type:'action.outcome.reconciled', source:'mcp-reconciliation', actor_id:getIdentity()?.id || null, target_id:actionId,
-    payload:{ action_id:actionId, outcome:action.status, client:client || null, evidence_note:String(args.evidence_note || '').slice(0,500) },
-  });
-  return { ok:true, action, changed:true, reconciliation:{required:false,state:'RESOLVED'} };
+
+  try {
+    const observed = await homeAssistant.refresh(device);
+    const action = actionLedger.addEvidence(actionId,{source:'adapter-readback',adapter_id:'home_assistant_light',observed_at:new Date().toISOString(),observed_state:observed,trust:'runtime-observed',attribution:'UNPROVEN'});
+    appendEvent({type:'action.reconciliation.observed',source:'adapter-readback',actor_id:getIdentity()?.id||null,target_id:actionId,payload:{action_id:actionId,client:client||null,observed_state:observed,attribution:'UNPROVEN'}});
+    return {ok:true,action,changed:false,reconciliation:{required:true,state:'REQUIRED',reason:'state_observed_but_execution_attribution_unproven'},observation:{state:observed,attribution:'UNPROVEN'},note:'Current device state was observed, but Home Assistant state readback cannot prove that this specific interrupted command caused it.'};
+  } catch (error) {
+    const action = actionLedger.addEvidence(actionId,{source:'adapter-readback',adapter_id:'home_assistant_light',observed_at:new Date().toISOString(),observation_error:String(error?.message||error),trust:'runtime-observed',attribution:'UNPROVEN'});
+    return {ok:true,action,changed:false,reconciliation:{required:true,state:'REQUIRED',reason:'trusted_observation_unavailable'},note:'Trusted readback was unavailable; action remains UNKNOWN.'};
+  }
 }
 
 function northboundExplain(args = {}) {
@@ -577,7 +581,7 @@ const server = http.createServer(async (req, res) => {
     if (req.url==='/mcp' && req.method==='DELETE') return await mcpServer.handle(req,res,{});
     if (req.method==='GET' && req.url==='/api/everyday') {
       refreshContext();
-      return json(res,200,{ok:true,version:'1.8.2',...everyday.snapshot(),context:publicContext(),identity:getIdentity(),runtime:runtimeStatus(),ai:aiStatus(),bridge:homeAssistant.status(),routines:ROUTINES.map(({re,...r})=>r),devices:publicDevices().filter(d=>d.type!=='door').map(d=>({...d,execution_mode:executionMode(d)})),actor_presence:getContextGraphState().actors,logs:readLogs().slice(-25).reverse()});
+      return json(res,200,{ok:true,version:'1.8.2.1',...everyday.snapshot(),context:publicContext(),identity:getIdentity(),runtime:runtimeStatus(),ai:aiStatus(),bridge:homeAssistant.status(),routines:ROUTINES.map(({re,...r})=>r),devices:publicDevices().filter(d=>d.type!=='door').map(d=>({...d,execution_mode:executionMode(d)})),actor_presence:getContextGraphState().actors,logs:readLogs().slice(-25).reverse()});
     }
     if (req.method==='POST' && req.url==='/api/everyday/profile') {
       if (getIdentity().role!=='owner') return json(res,403,{ok:false,error:'개인 설정은 소유자 역할에서 변경해 주세요.'});

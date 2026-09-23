@@ -4,11 +4,11 @@ const { appendEvent } = require('./event-store');
 
 const MCP_PROTOCOL_VERSION = '2026-07-28';
 const LEGACY_PROTOCOL_VERSIONS = ['2025-11-25','2025-06-18','2025-03-26','2024-11-05'];
-const MCP_SERVER_VERSION = 'reality-mcp/1.8.2';
+const MCP_SERVER_VERSION = 'reality-mcp/1.8.2.1';
 const SERVER_INFO = {
   name: 'reality-layer',
   title: 'Reality Layer',
-  version: '1.8.2',
+  version: '1.8.2.1',
   description: 'Local-first Reality Layer northbound MCP server with policy/safety-gated physical execution.',
 };
 
@@ -67,8 +67,8 @@ const TOOLS = [
   {
     name:'reality.action.reconcile',
     title:'Reconcile Unknown Reality Action',
-    description:'External-test primitive: resolve an UNKNOWN action to SUCCEEDED or FAILED using explicit external evidence. This never retries or performs a physical action.',
-    inputSchema:{ type:'object', additionalProperties:false, properties:{ action_id:{type:'string',minLength:8,maxLength:120}, outcome:{type:'string',enum:['SUCCEEDED','FAILED']}, evidence_note:{type:'string',minLength:3,maxLength:500} }, required:['action_id','outcome','evidence_note'] },
+    description:'Ask Reality Layer to gather trusted adapter/provider evidence for an UNKNOWN action. Caller assertions cannot set SUCCEEDED or FAILED, and this never retries the physical action.',
+    inputSchema:{ type:'object', additionalProperties:false, properties:{ action_id:{type:'string',minLength:8,maxLength:120} }, required:['action_id'] },
     outputSchema:{ type:'object' },
     annotations:{ readOnlyHint:false, destructiveHint:false, idempotentHint:true, openWorldHint:false },
   },

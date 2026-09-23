@@ -46,7 +46,7 @@ async function test(name,fn){try{await fn();pass++;console.log('PASS',name);}cat
       assert.equal(r.status,200);
       assert.equal(r.data.result.protocolVersion,'2025-11-25');
       assert.equal(r.data.result.serverInfo.name,'reality-layer');
-      assert.equal(r.data.result.serverInfo.version,'1.8.2');
+      assert.equal(r.data.result.serverInfo.version,'1.8.2.1');
       sessionId=r.headers.get('mcp-session-id');
       assert.ok(sessionId);
     });

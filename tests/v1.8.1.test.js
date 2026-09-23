@@ -38,9 +38,9 @@ const {RealityLayerAdapter}=require('../integrations/langgraph/reality-layer-ada
     ledger.transition(unknown.id,'UNKNOWN',{source:'test',note:'transport lost after dispatch'});
     const before=await rl.actionStatus(unknown.id);
     assert.equal(before.reconciliation.required,true);
-    const reconciled=await rl.reconcile(unknown.id,'SUCCEEDED','device readback matched expected power state');
-    assert.equal(reconciled.ok,true); assert.equal(reconciled.changed,true); assert.equal(reconciled.action.status,'SUCCEEDED');
-    assert.equal(reconciled.reconciliation.state,'RESOLVED');
+    const reconciled=await rl.reconcile(unknown.id);
+    assert.equal(reconciled.ok,true); assert.equal(reconciled.changed,false); assert.equal(reconciled.action.status,'UNKNOWN');
+    assert.equal(reconciled.reconciliation.state,'REQUIRED');
 
     console.log('V1.8.1 TESTS PASSED');
   } finally { await new Promise(resolve=>server.close(resolve)); }

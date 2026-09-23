@@ -1,6 +1,6 @@
 {
-  "name": "reality-layer-v1.8.2-external-runtime",
-  "version": "1.8.2",
+  "name": "reality-layer-v1.8.2.1-external-runtime",
+  "version": "1.8.2.1",
   "private": true,
   "description": "Reality Layer external-test runtime with explicit action outcomes, reconciliation, and LangGraph adapter",
   "scripts": {
