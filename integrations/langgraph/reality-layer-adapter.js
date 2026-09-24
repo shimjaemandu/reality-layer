@@ -34,13 +34,13 @@ class RealityLayerAdapter {
   execute(plan_id){return this.call('reality.execute',{plan_id});}
   explain(plan_id,limit=20){return this.call('reality.explain',{plan_id,limit});}
   actionStatus(action_id){return this.call('reality.action.get',{action_id});}
-  reconcile(action_id,outcome,evidence_note){return this.call('reality.action.reconcile',{action_id,outcome,evidence_note});}
+  reconcile(action_id){return this.call('reality.action.reconcile',{action_id});}
   tools(){ return [
     {name:'reality_plan',description:'Plan a real-world action through Reality Layer. Does not execute.',invoke:({text})=>this.plan(text)},
     {name:'reality_execute',description:'Execute a previously approved Reality Layer plan. User-confirmation gates cannot be self-approved by the agent.',invoke:({plan_id})=>this.execute(plan_id)},
     {name:'reality_observe',description:'Read current Reality Layer state and audit context.',invoke:(args={})=>this.observe(args)},
     {name:'reality_action_status',description:'Read stable action outcome/provenance by action_id.',invoke:({action_id})=>this.actionStatus(action_id)},
-    {name:'reality_reconcile',description:'Resolve UNKNOWN to SUCCEEDED or FAILED from explicit external evidence. Never retries the action.',invoke:({action_id,outcome,evidence_note})=>this.reconcile(action_id,outcome,evidence_note)},
+    {name:'reality_reconcile',description:'Ask the Runtime to gather trusted adapter/provider evidence for UNKNOWN. Caller assertions cannot resolve the action and the action is never retried.',invoke:({action_id})=>this.reconcile(action_id)},
   ]; }
 }
 module.exports={RealityLayerAdapter};

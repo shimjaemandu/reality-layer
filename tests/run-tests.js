@@ -8,7 +8,7 @@ try{
   fs.mkdirSync(path.join(temp,'data'));
   const env={...process.env,REALITY_LIVE:'0',PC_ADAPTER_DRY_RUN:'1'};
   for(const key of ['OPENAI_API_KEY','HA_URL','HA_TOKEN'])delete env[key];
-  for(const suite of ['test.js','tests/everyday.test.js','tests/v1.5.test.js','tests/v1.6.test.js','tests/v1.7.test.js','tests/v1.7.1.test.js','tests/v1.8.test.js','tests/v1.8.1.test.js']){
+  for(const suite of ['test.js','tests/everyday.test.js','tests/v1.5.test.js','tests/v1.6.test.js','tests/v1.7.test.js','tests/v1.7.1.test.js','tests/v1.8.test.js','tests/v1.8.1.test.js','tests/v1.8.2.test.js','tests/v1.8.2-process-crash.test.js','tests/v1.8.2.1.test.js']){
     const result=spawnSync(process.execPath,[suite],{cwd:temp,env,stdio:'inherit',timeout:90000});
     if(result.status!==0){process.exitCode=1;break;}
   }

@@ -52,7 +52,7 @@ function meta(clientName='v17-test-agent'){return {'io.modelcontextprotocol/prot
       const discover=await rpc('server/discover',{});
       assert.equal(discover.status,200);
       assert.deepEqual(discover.data.result.supportedVersions,['2026-07-28']);
-      assert.equal(discover.data.result._meta['io.modelcontextprotocol/serverInfo'].version,'1.8.1');
+      assert.equal(discover.data.result._meta['io.modelcontextprotocol/serverInfo'].version,'1.8.2.2');
       const list=await rpc('tools/list',{});
       assert.ok(list.data.result.tools.length>=5);
       assert.equal(list.data.result.cacheScope,'private');
@@ -69,7 +69,7 @@ function meta(clientName='v17-test-agent'){return {'io.modelcontextprotocol/prot
     await test('reality.discover/observe가 Graph와 State/Event를 읽기 전용으로 노출한다',async()=>{
       const d=await tool('reality.discover',{include_graph:true},'agent-A');
       const ds=d.data.result.structuredContent;
-      assert.equal(ds.ok,true); assert.equal(ds.reality_layer_version,'1.8.1'); assert.ok(ds.graph.nodes.length>0); assert.ok(ds.devices.length>0);
+      assert.equal(ds.ok,true); assert.equal(ds.reality_layer_version,'1.8.2.2'); assert.ok(ds.graph.nodes.length>0); assert.ok(ds.devices.length>0);
       const o=await tool('reality.observe',{device_id:'bedroom_light',event_limit:5,include_context:true},'agent-A');
       const os=o.data.result.structuredContent;
       assert.equal(os.ok,true); assert.deepEqual(Object.keys(os.state_store.devices),['bedroom_light']);

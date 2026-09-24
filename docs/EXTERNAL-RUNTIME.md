@@ -1,4 +1,4 @@
-# Reality Layer v1.8.1 — external runtime contract
+# Reality Layer v1.8.2.2 — external runtime contract
 
 This build is intentionally small. It is for third-party agent integration tests, not a claim of production readiness.
 
@@ -50,10 +50,18 @@ The example uses a safe virtual `침실 불 켜줘` AUTO action and prints the f
 
 Read: `reality.action.get({action_id})`
 
-Resolve: `reality.action.reconcile({action_id, outcome:"SUCCEEDED"|"FAILED", evidence_note:"..."})`
+Reconcile: `reality.action.reconcile({action_id})`
 
-Reconciliation never retries the physical action. This external-test primitive expects evidence from a trustworthy readback, transaction receipt or equivalent source. A production design should bind reconciliation evidence to a trusted adapter/readback source rather than accept a generic assertion.
+Reconciliation never retries the physical action and callers cannot choose `SUCCEEDED`/`FAILED` or supply free-text proof. Reality Layer gathers adapter/provider-owned evidence itself. For the current Home Assistant light adapter, state readback is recorded as an observation but does not prove that this specific interrupted command caused the state, so the action may correctly remain `UNKNOWN`.
 
 ## Feedback wanted
 
 Please report where this contract conflicts with graph durability/checkpointing, retry semantics, tool-call identity, or recovery after an UNKNOWN outcome. A minimal reproduction is more useful than broad architecture feedback.
+
+## v1.8.2.2 crash-recovery hardening
+
+The runtime now treats a persisted `STARTED` action found during process startup/recovery as `UNKNOWN` with reconciliation required. It does not infer `FAILED` merely because the previous process disappeared.
+
+After the adapter dispatch boundary has been crossed, an exception is also recorded as `UNKNOWN` unless the adapter explicitly proves that execution never started (`executionNotStarted === true`). Reusing an already-recorded Typed Action IR id is rejected at the executor boundary instead of redispatching the side effect.
+
+Regression coverage includes persisted-STARTED recovery and a child-process crash/restart fixture. `UNKNOWN` remains intentionally unresolved until reconciliation evidence is supplied; the generic reconciliation endpoint remains an external-test primitive rather than a production trust mechanism.
