@@ -443,7 +443,7 @@ function northboundDiscover(args = {}) {
   const includeGraph = args.include_graph !== false;
   return {
     ok:true,
-    reality_layer_version:'1.8.2.1',
+    reality_layer_version:'1.8.2.2',
     identity:getIdentity(),
     runtime:runtimeStatus(),
     capability_model:publicCapabilityModel(),
