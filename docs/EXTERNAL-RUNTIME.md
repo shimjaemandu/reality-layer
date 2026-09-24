@@ -50,9 +50,9 @@ The example uses a safe virtual `침실 불 켜줘` AUTO action and prints the f
 
 Read: `reality.action.get({action_id})`
 
-Resolve: `reality.action.reconcile({action_id, outcome:"SUCCEEDED"|"FAILED", evidence_note:"..."})`
+Reconcile: `reality.action.reconcile({action_id})`
 
-Reconciliation never retries the physical action. This external-test primitive expects evidence from a trustworthy readback, transaction receipt or equivalent source. A production design should bind reconciliation evidence to a trusted adapter/readback source rather than accept a generic assertion.
+Reconciliation never retries the physical action and callers cannot choose `SUCCEEDED`/`FAILED` or supply free-text proof. Reality Layer gathers adapter/provider-owned evidence itself. For the current Home Assistant light adapter, state readback is recorded as an observation but does not prove that this specific interrupted command caused the state, so the action may correctly remain `UNKNOWN`.
 
 ## Feedback wanted
 
