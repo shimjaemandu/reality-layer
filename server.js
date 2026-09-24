@@ -581,7 +581,7 @@ const server = http.createServer(async (req, res) => {
     if (req.url==='/mcp' && req.method==='DELETE') return await mcpServer.handle(req,res,{});
     if (req.method==='GET' && req.url==='/api/everyday') {
       refreshContext();
-      return json(res,200,{ok:true,version:'1.8.2.1',...everyday.snapshot(),context:publicContext(),identity:getIdentity(),runtime:runtimeStatus(),ai:aiStatus(),bridge:homeAssistant.status(),routines:ROUTINES.map(({re,...r})=>r),devices:publicDevices().filter(d=>d.type!=='door').map(d=>({...d,execution_mode:executionMode(d)})),actor_presence:getContextGraphState().actors,logs:readLogs().slice(-25).reverse()});
+      return json(res,200,{ok:true,version:'1.8.2.2',...everyday.snapshot(),context:publicContext(),identity:getIdentity(),runtime:runtimeStatus(),ai:aiStatus(),bridge:homeAssistant.status(),routines:ROUTINES.map(({re,...r})=>r),devices:publicDevices().filter(d=>d.type!=='door').map(d=>({...d,execution_mode:executionMode(d)})),actor_presence:getContextGraphState().actors,logs:readLogs().slice(-25).reverse()});
     }
     if (req.method==='POST' && req.url==='/api/everyday/profile') {
       if (getIdentity().role!=='owner') return json(res,403,{ok:false,error:'개인 설정은 소유자 역할에서 변경해 주세요.'});
