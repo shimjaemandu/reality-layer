@@ -1,4 +1,4 @@
-Reality Layer 1.8.2.1 - 처음 실행하기
+Reality Layer 1.8.2.2 - 처음 실행하기
 
 1. ZIP 파일을 완전히 압축 해제하세요.
 2. Node.js 22 이상이 설치된 노트북에서 START-DEMO.cmd를 더블클릭하세요.
@@ -15,10 +15,10 @@ Core 개발 API:
 /api/state-store    = 현재 상태
 /api/event-store    = 과거 이벤트
 
-PowerShell에서는 npm.cmd test를 권장합니다. v1.8.2.1 외부 Runtime/adapter 테스트까지 포함해 전체 PASS를 확인하세요.
+PowerShell에서는 npm.cmd test를 권장합니다. v1.8.2.2 외부 Runtime/adapter 테스트까지 포함해 전체 PASS를 확인하세요.
 
 
-v1.8.2.1 MCP / External action contract:
+v1.8.2.2 MCP / External action contract:
 - Endpoint: http://127.0.0.1:3000/mcp
 - Protocol: MCP 2026-07-28 modern stateless
 - 외부 Agent용 Bearer token은 실행 터미널에 표시됩니다.

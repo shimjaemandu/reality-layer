@@ -625,7 +625,14 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && req.url.startsWith('/api/reality-graph')) return json(res, 200, { ok:true, graph:publicRealityGraph() });
     if (req.method === 'GET' && req.url.startsWith('/api/event-store')) return json(res, 200, { ok:true, event_store:publicEventStore({limit:100,reverse:true}) });
     if (req.method === 'GET' && req.url.startsWith('/api/actions')) { const id=new URL(req.url,'http://local').searchParams.get('id'); return json(res,200,{ok:true, action:id?actionLedger.get(id):undefined, actions:id?undefined:actionLedger.list(100)}); }
-    if (req.method === 'POST' && req.url === '/api/actions/reconcile') { const body=await readBody(req); const action=actionLedger.reconcile(body.action_id,{outcome:body.outcome,evidence:body.evidence||{}}); appendEvent({type:'action.outcome.reconciled',source:'reconciliation',target_id:body.action_id,payload:{action_id:body.action_id,outcome:action.status}}); return json(res,200,{ok:true,action}); }
+    if (req.method === 'POST' && req.url === '/api/actions/reconcile') {
+      const body=await readBody(req);
+      const result=await northboundActionReconcile(
+        {action_id:body.action_id},
+        {client:{name:'local-rest',trust:'local-runtime'}}
+      );
+      return json(res,200,result);
+    }
     if (req.method === 'GET' && req.url.startsWith('/api/context-graph')) return json(res, 200, { ok:true, graph:publicContextGraph(), compatibility_projection:true });
     if (req.method === 'POST' && req.url === '/api/context-graph/actor') {
       const body = await readBody(req);

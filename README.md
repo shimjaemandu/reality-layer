@@ -1,10 +1,10 @@
-# Reality Layer v1.8.2.1 — External Runtime Test Build
+# Reality Layer v1.8.2.2 — External Runtime Test Build
 
-> Third-party integration checkpoint: explicit action outcomes (`SUCCEEDED` / `FAILED` / `UNKNOWN`), reconciliation, stable Typed Action IR IDs, provenance, and a dependency-free LangGraph adapter. v1.8.2.1 exposes the action contract directly in `reality.execute` and adds MCP action-status/reconciliation tools. See `docs/EXTERNAL-RUNTIME.md`.
+> Third-party integration checkpoint: explicit action outcomes (`SUCCEEDED` / `FAILED` / `UNKNOWN`), reconciliation, stable Typed Action IR IDs, provenance, and a dependency-free LangGraph adapter. v1.8.2.2 exposes the action contract directly in `reality.execute` and adds MCP action-status/reconciliation tools. See `docs/EXTERNAL-RUNTIME.md`.
 
-# Reality Layer 1.8.2.1 · Dual-era MCP + External Action Contract
+# Reality Layer 1.8.2.2 · Dual-era MCP + External Action Contract
 
-Reality Layer v1.8.2.1은 v1.7.1의 **Capability Model + Typed Action IR + Reality Graph / State Store / Event Store + Dual-era MCP**를 유지하면서, 외부 AI/Agent가 실행 결과를 안전하게 복구할 수 있도록 **stable action outcome contract와 reconciliation 경로**를 노출합니다.
+Reality Layer v1.8.2.2은 v1.7.1의 **Capability Model + Typed Action IR + Reality Graph / State Store / Event Store + Dual-era MCP**를 유지하면서, 외부 AI/Agent가 실행 결과를 안전하게 복구할 수 있도록 **stable action outcome contract와 reconciliation 경로**를 노출합니다.
 
 ```text
 External AI / Agent

@@ -1,4 +1,4 @@
-# Reality Layer v1.8.2.1 — external runtime contract
+# Reality Layer v1.8.2.2 — external runtime contract
 
 This build is intentionally small. It is for third-party agent integration tests, not a claim of production readiness.
 
@@ -58,7 +58,7 @@ Reconciliation never retries the physical action. This external-test primitive e
 
 Please report where this contract conflicts with graph durability/checkpointing, retry semantics, tool-call identity, or recovery after an UNKNOWN outcome. A minimal reproduction is more useful than broad architecture feedback.
 
-## v1.8.2.1 crash-recovery hardening
+## v1.8.2.2 crash-recovery hardening
 
 The runtime now treats a persisted `STARTED` action found during process startup/recovery as `UNKNOWN` with reconciliation required. It does not infer `FAILED` merely because the previous process disappeared.
 
